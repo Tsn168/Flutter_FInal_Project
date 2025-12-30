@@ -11,35 +11,27 @@ class _MainScreenState extends State<MainScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: const Color(0xFFFFFFFF),
       appBar: AppBar(
-        flexibleSpace: Container(
-          decoration: const BoxDecoration(
-            gradient: LinearGradient(
-              colors: [Color(0xFF1AE965), Colors.white],
-              begin: Alignment.topCenter,
-              end: Alignment.bottomCenter,
-            ),
-          ),
-        ),
         title: Row(
           children: [
             InkWell(
               onTap: () {
-                // Logo pressed
                 print('Logo pressed');
               },
               borderRadius: BorderRadius.circular(20),
-              child: Image.asset('lib/assets/logo.png', height: 32),
+              child: Image.asset('lib/assets/images/logo.png', height: 32),
             ),
-            const SizedBox(width: 120),
-            const Text(
-              'Mahop Flex',
-              style: TextStyle(
-                fontSize: 20,
-                fontWeight: FontWeight.bold,
-                color: Colors.black,
-                fontFamily: 'Times New Roman',
+            Expanded(
+              child: Text(
+                'Mahop Flex',
+                textAlign: TextAlign.center,
+                style: const TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.black,
+                  fontFamily: 'Times New Roman',
+                ),
               ),
             ),
           ],
@@ -48,35 +40,49 @@ class _MainScreenState extends State<MainScreen> {
           IconButton(
             padding: const EdgeInsets.only(right: 20),
             iconSize: 40,
-            icon: Icon(Icons.account_circle_outlined),
+            icon: const Icon(Icons.account_circle_outlined),
             onPressed: () {},
           ),
         ],
+        // Set app bar background to white
+        elevation: 0, // Remove shadow
       ),
-      body: const Padding(
-        padding: EdgeInsets.fromLTRB(16, 40, 16, 0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              'Good morning!',
-              style: TextStyle(
-                fontSize: 25,
-                fontWeight: FontWeight.bold,
-                color: Color.fromARGB(255, 157, 155, 155),
+      body: Container(
+        width: double.infinity,
+        height: double.infinity,
+        decoration: const BoxDecoration(
+          gradient: LinearGradient(
+            colors: [Colors.white, Color(0xFF1AE965)],
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+            stops: [0, 1],
+          ),
+        ),
+        child: Padding(
+          padding: const EdgeInsets.fromLTRB(16, 40, 16, 0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                'Good morning!',
+                style: TextStyle(
+                  fontSize: 25,
+                  fontWeight: FontWeight.bold,
+                  color: Color.fromARGB(255, 157, 155, 155),
+                ),
               ),
-            ),
-            SizedBox(height: 20),
-            Text(
-              'Get Ready to cook ?',
-              style: TextStyle(
-                fontSize: 25,
-                color: Colors.black,
-                fontWeight: FontWeight.bold,
-                fontFamily: 'SFPro',
+              SizedBox(height: 10),
+              Text(
+                'Get Ready to cook ?',
+                style: TextStyle(
+                  fontSize: 25,
+                  color: Colors.black,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
-            ),
-          ],
+              // You can add more widgets here that will appear on the gradient background
+            ],
+          ),
         ),
       ),
     );
