@@ -12,5 +12,9 @@ final scrambledEggsRecipe = Recipe(
   title: 'Scrambled Eggs',
   ingredients: [eggs, milk, butter],
 );
-
-final allRecipes = [pancakeRecipe, scrambledEggsRecipe];
+final curryRecipe = Recipe(
+  id: 'r3',
+  title: 'Curry',
+  ingredients: [chicken, curry_powder, coconut_milk, vegetables],
+);
+final allRecipes = [pancakeRecipe, scrambledEggsRecipe, curryRecipe];
