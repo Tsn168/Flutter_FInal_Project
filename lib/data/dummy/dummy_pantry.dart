@@ -1,3 +1,4 @@
+import '../../models/pantry.dart';
 import 'dummy_ingredient.dart';
 import 'dummy_recipe.dart';
 

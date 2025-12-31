@@ -1,14 +1,10 @@
+import '../../models/recipe.dart';
 import 'dummy_ingredient.dart';
 
 final pancakeRecipe = Recipe(
   id: 'r1',
   title: 'Pancakes',
-  ingredients: [
-    flour,
-    eggs,
-    milk,
-    sugar,
-  ],
+  ingredients: [flour, eggs, milk, sugar],
 );
 
 final scrambledEggsRecipe = Recipe(
@@ -16,5 +12,9 @@ final scrambledEggsRecipe = Recipe(
   title: 'Scrambled Eggs',
   ingredients: [eggs, milk, butter],
 );
-
-final allRecipes = [pancakeRecipe, scrambledEggsRecipe];
+final curryRecipe = Recipe(
+  id: 'r3',
+  title: 'Curry',
+  ingredients: [chicken, curry_powder, coconut_milk, vegetables],
+);
+final allRecipes = [pancakeRecipe, scrambledEggsRecipe, curryRecipe];
