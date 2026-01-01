@@ -22,6 +22,4 @@ flutter:
   # ===== ASSETS =====
   assets:
     - lib/assets/images/
-
-  # ===== FONTS =====
- 
+    - lib/assets/fonts/
