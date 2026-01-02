@@ -24,11 +24,13 @@ class _MainScreenState extends State<MainScreen> {
     final query = _searchController.text.toLowerCase().trim();
     setState(() {
       _hasSearched = query.isNotEmpty;
-      _filteredRecipes = query.isEmpty
-          ? []
-          : allRecipes
-                .where((recipe) => recipe.title.toLowerCase().contains(query))
-                .toList();
+      if (query.isEmpty) {
+        _filteredRecipes = [];
+      } else {
+        _filteredRecipes = dummyRecipes
+            .where((recipe) => recipe.title.toLowerCase().contains(query))
+            .toList();
+      }
     });
   }
 
@@ -38,7 +40,6 @@ class _MainScreenState extends State<MainScreen> {
     super.dispose();
   }
 
-  // Popular Recipe Card Widget
   Widget _popularRecipeCard(Recipe recipe) {
     return Container(
       width: 160,
@@ -80,17 +81,15 @@ class _MainScreenState extends State<MainScreen> {
     );
   }
 
-  // Horizontal row of popular recipes
   Widget _popularRecipeRow({required bool reverse}) {
     return SizedBox(
       height: 170,
       child: ListView.builder(
         scrollDirection: Axis.horizontal,
         reverse: reverse,
-        itemCount: allRecipes.length,
-        itemBuilder: (context, index) {
-          return _popularRecipeCard(allRecipes[index]);
-        },
+        itemCount: dummyRecipes.length,
+        itemBuilder: (context, index) =>
+            _popularRecipeCard(dummyRecipes[index]),
       ),
     );
   }
@@ -105,9 +104,7 @@ class _MainScreenState extends State<MainScreen> {
         title: Row(
           children: [
             InkWell(
-              onTap: () {
-                print('Logo pressed!');
-              },
+              onTap: () => print('Logo pressed!'),
               child: Image.asset('lib/assets/images/logo.png', height: 32),
             ),
             const Expanded(
@@ -130,9 +127,7 @@ class _MainScreenState extends State<MainScreen> {
               size: 36,
               color: Colors.black,
             ),
-            onPressed: () {
-              print('User icon pressed!');
-            },
+            onPressed: () => print('User icon pressed!'),
           ),
         ],
       ),
@@ -144,8 +139,8 @@ class _MainScreenState extends State<MainScreen> {
             end: Alignment.bottomCenter,
           ),
         ),
-        child: Padding(
-          padding: const EdgeInsets.fromLTRB(16, 20, 16, 0),
+        padding: const EdgeInsets.fromLTRB(16, 20, 16, 0),
+        child: SingleChildScrollView(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -162,8 +157,9 @@ class _MainScreenState extends State<MainScreen> {
                 'Get ready to cook?',
                 style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
               ),
-
               const SizedBox(height: 16),
+
+              // 🔹 Search Bar
               TextField(
                 controller: _searchController,
                 decoration: InputDecoration(
@@ -177,41 +173,49 @@ class _MainScreenState extends State<MainScreen> {
                   ),
                 ),
               ),
-
               const SizedBox(height: 24),
+
               const Text(
                 'Popular Recipes',
                 style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
               ),
               const SizedBox(height: 12),
 
-              // Layer 1 (normal)
               _popularRecipeRow(reverse: false),
               const SizedBox(height: 12),
-
-              // Layer 2 (reversed)
               _popularRecipeRow(reverse: true),
               const SizedBox(height: 12),
-
-              // Layer 3 (normal)
               _popularRecipeRow(reverse: false),
-              const SizedBox(height: 12),
+              const SizedBox(height: 24),
 
-              // Search results
-              Expanded(
-                child: !_hasSearched
-                    ? const SizedBox()
-                    : _filteredRecipes.isEmpty
-                    ? const Center(child: Text('No recipes found'))
+              // 🔹 Search Results
+              if (_hasSearched)
+                _filteredRecipes.isEmpty
+                    ? const Padding(
+                        padding: EdgeInsets.symmetric(vertical: 16),
+                        child: Center(child: Text('No recipes found')),
+                      )
                     : ListView.builder(
+                        shrinkWrap: true,
+                        physics: const NeverScrollableScrollPhysics(),
                         itemCount: _filteredRecipes.length,
                         itemBuilder: (context, index) {
-                          return ListTile(
-                            title: Text(_filteredRecipes[index].title),
+                          final recipe = _filteredRecipes[index];
+                          return Card(
+                            child: ListTile(
+                              title: Text(recipe.title),
+                              subtitle: Text(
+                                recipe.ingredients
+                                    .map(
+                                      (i) =>
+                                          '${i.name} (${i.quantity} ${i.unit})',
+                                    )
+                                    .join(', '),
+                              ),
+                            ),
                           );
                         },
                       ),
-              ),
             ],
           ),
         ),

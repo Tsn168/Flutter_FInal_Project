@@ -1,11 +1,13 @@
 class Ingredient {
   final String id;
-  final String name;
-  final String quantity;
+  final String name; // e.g., "Eggs", "Flour"
+  final String unit; // e.g., "pcs", "grams", "ml"
+  final double quantity; // numeric quantity
 
-  const Ingredient({
+  Ingredient({
     required this.id,
     required this.name,
+    required this.unit,
     required this.quantity,
   });
 }
