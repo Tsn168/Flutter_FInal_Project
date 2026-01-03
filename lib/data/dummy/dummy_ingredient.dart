@@ -1,24 +1,81 @@
-// dummy/dummy_ingredient.dart
 import '../../models/ingredient.dart';
 
-const flour = Ingredient(id: 'i1', name: 'Flour', quantity: '2 cups');
-const eggs = Ingredient(id: 'i2', name: 'Eggs', quantity: '6 pcs');
-const milk = Ingredient(id: 'i3', name: 'Milk', quantity: '500 ml');
-const sugar = Ingredient(id: 'i4', name: 'Sugar', quantity: '1 cup');
-const butter = Ingredient(id: 'i5', name: 'Butter', quantity: '100 g');
-const chicken = Ingredient(id: 'i6', name: 'Chicken', quantity: '500 g');
-const curry_powder = Ingredient(
+final Ingredient eggs = Ingredient(
+  id: 'i1',
+  name: 'Eggs',
+  unit: 'pcs',
+  quantity: 12,
+  image: 'lib/assets/images/egg.png',
+);
+
+final Ingredient milk = Ingredient(
+  id: 'i2',
+  name: 'Milk',
+  unit: 'ml',
+  quantity: 500,
+  image: 'lib/assets/images/milk.png',
+);
+
+final Ingredient butter = Ingredient(
+  id: 'i3',
+  name: 'Butter',
+  unit: 'grams',
+  quantity: 100,
+  image: 'lib/assets/images/butter.png',
+);
+
+final Ingredient flour = Ingredient(
+  id: 'i4',
+  name: 'Flour',
+  unit: 'grams',
+  quantity: 1000,
+  image: 'lib/assets/images/flour.png',
+);
+
+final Ingredient sugar = Ingredient(
+  id: 'i5',
+  name: 'Sugar',
+  unit: 'grams',
+  quantity: 200,
+  image: 'lib/assets/images/sugar.png',
+);
+
+final Ingredient chicken = Ingredient(
+  id: 'i6',
+  name: 'Chicken',
+  unit: 'pcs',
+  quantity: 2,
+  image: 'lib/assets/images/chicken.png',
+);
+
+final Ingredient tomato = Ingredient(
   id: 'i7',
-  name: 'Curry Powder',
-  quantity: '2 tbsp',
+  name: 'Tomato',
+  unit: 'pcs',
+  quantity: 5,
+  image: 'lib/assets/images/tomato.png',
 );
-const coconut_milk = Ingredient(
+
+final Ingredient cream = Ingredient(
   id: 'i8',
-  name: 'Coconut Milk',
-  quantity: '400 ml',
+  name: 'Cream',
+  unit: 'grams',
+  quantity: 100,
+  image: 'lib/assets/images/cream.png',
 );
-const vegetables = Ingredient(
+
+final Ingredient pasta = Ingredient(
   id: 'i9',
-  name: 'Mixed Vegetables',
-  quantity: '300 g',
+  name: 'Pasta',
+  unit: 'grams',
+  quantity: 100,
+  image: 'lib/assets/images/pasta.jpg',
+);
+
+final Ingredient carrot = Ingredient(
+  id: 'i10',
+  name: 'Carrot',
+  unit: 'pcs',
+  quantity: 5,
+  image: 'lib/assets/images/carrot.png',
 );

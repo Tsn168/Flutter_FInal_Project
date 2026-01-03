@@ -4,10 +4,12 @@ class Recipe {
   final String id;
   final String title;
   final List<Ingredient> ingredients;
+  final String image;
 
-  const Recipe({
+  Recipe({
     required this.id,
     required this.title,
-    this.ingredients = const [],
+    required this.ingredients,
+    required this.image,
   });
 }
