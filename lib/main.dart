@@ -37,6 +37,7 @@
 // }
 import 'package:flutter/material.dart';
 import 'tab/tab_page.dart';
+import 'package:mahopflex/ui/Welcome_Page/welcome_Page.dart';
 
 void main() {
   runApp(const MyApp());
@@ -49,7 +50,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return const MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: BottomNavTab(), // Start with the 3-tab page
+      home: const WelcomePage(),
     );
   }
 }

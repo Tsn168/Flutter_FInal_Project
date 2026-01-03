@@ -1,18 +1,15 @@
 import 'package:flutter/material.dart';
+import '../Login_Register_Page/login_Page.dart';
+import '../Login_Register_Page/register_Page.dart';
+import '../widgets/custom_button.dart';
+
 
 void main() {
-  runApp(
-    MaterialApp(
-      debugShowCheckedModeBanner: false,
-      home: WelcomePage(),
-    ),
-  );
+  runApp(MaterialApp(debugShowCheckedModeBanner: false, home: WelcomePage()));
 }
 
 class WelcomePage extends StatelessWidget {
-  const WelcomePage({
-    super.key,
-  });
+  const WelcomePage({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -34,11 +31,7 @@ class WelcomePage extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              Image.asset(
-                'lib/assets/images/logo.png',
-                
-                height: 100,
-              ),
+              Image.asset('lib/assets/images/logo.png', height: 100),
               SizedBox(height: 20),
               Text(
                 "Mahop Flex",
@@ -48,7 +41,7 @@ class WelcomePage extends StatelessWidget {
                   color: Colors.white,
                 ),
               ),
-              SizedBox(height: 100,),
+              SizedBox(height: 100),
               Text(
                 "Welcome !",
                 style: TextStyle(
@@ -68,43 +61,37 @@ class WelcomePage extends StatelessWidget {
                 ),
               ),
               SizedBox(height: 20),
-              ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Color.fromARGB(255, 22, 193, 84),
-                  padding: EdgeInsets.symmetric(horizontal: 100, vertical: 15),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(20),
-                  ),
-                ),
-                onPressed: (){}, 
-                child: Text(
-                  "Login",
-                  style: TextStyle(
-                    fontSize: 30,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.white
-                  ),
-                ), 
+              CustomButton.text(
+                text: "Login",
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => const LoginPage()),
+                  );
+                },
+                backgroundColor: Color.fromARGB(255, 22, 193, 84),
+                textColor: Colors.white,
+                width: 500,
+                height: 60,
+                fontSize: 30,
+                borderRadius: 20,
               ),
               SizedBox(height: 10),
-              ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.white,
-                  padding: EdgeInsets.symmetric(horizontal: 80, vertical: 15),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(20),
-                  ),
-                ),
-                onPressed: (){}, 
-                child: Text(
-                  "Register",
-                  style: TextStyle(
-                    fontSize: 30,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.black
-                  ),
-                ), 
-              )
+              CustomButton.text(
+                text: "Register",
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => const RegisterPage()),
+                  );
+                },
+                backgroundColor: Colors.white,
+                textColor: Colors.black,
+                width: 500,
+                height: 60,
+                fontSize: 30,
+                borderRadius: 20,
+              ),
             ],
           ),
         ),
