@@ -1,18 +1,18 @@
 import 'package:flutter/material.dart';
-import 'ui/main/main_screen.dart';
+import 'package:mahopflex/ui/Welcome_Page/welcome_Page.dart';
 
 void main() {
   runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key, required Scaffold home});
+  const MyApp({super.key});
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: const MainScreen(),
+      home: const WelcomePage(),
     );
   }
 }

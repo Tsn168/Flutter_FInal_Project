@@ -34,6 +34,7 @@ class CustomButton extends StatelessWidget {
     double borderRadius = 12,
     bool fullWidth = false,
     double elevation = 2,
+    double fontSize = 16,
   }) {
     final hasGradient = gradientColors != null && gradientColors.isNotEmpty;
     final bgColor = backgroundColor ?? Colors.green;
@@ -61,7 +62,7 @@ class CustomButton extends StatelessWidget {
         text,
         style: TextStyle(
           color: textColor,
-          fontSize: 16,
+          fontSize: fontSize,
           fontWeight: FontWeight.w600,
         ),
       ),
