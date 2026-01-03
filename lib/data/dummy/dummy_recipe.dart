@@ -6,21 +6,57 @@ final List<Recipe> dummyRecipes = [
     id: 'r1',
     title: 'Scrambled Eggs',
     ingredients: [eggs, milk, butter],
-    steps:
-        '1. Beat the eggs with milk.\n2. Heat butter in pan.\n3. Cook eggs until fluffy.',
+
+    image: 'lib/assets/images/scrambled.jpg',
   ),
   Recipe(
     id: 'r2',
     title: 'Pancakes',
     ingredients: [flour, eggs, milk, sugar, butter],
-    steps:
-        '1. Mix flour, eggs, milk, sugar.\n2. Heat butter on pan.\n3. Cook batter until golden.',
+
+    image: 'lib/assets/images/pancake.png',
   ),
   Recipe(
     id: 'r3',
     title: 'Tomato Chicken',
     ingredients: [chicken, tomato, butter],
-    steps:
-        '1. Cut chicken and tomato.\n2. Saute in butter.\n3. Cook until chicken is done.',
+
+    image: 'lib/assets/images/potatochicken.png',
+  ),
+  Recipe(
+    id: 'r4',
+    title: 'Chicken Fried',
+    ingredients: [chicken, butter, flour],
+    image: 'lib/assets/images/image.png',
+  ),
+  Recipe(
+    id: 'r5',
+    title: 'Pasta Tomato',
+    ingredients: [eggs, sugar, pasta, tomato],
+    image: 'lib/assets/images/pastatomato.png',
+  ),
+  Recipe(
+    id: 'r6',
+    title: 'Basic Cake',
+    ingredients: [cream, butter, flour],
+    image: 'lib/assets/images/basiccake.png',
+  ),
+  Recipe(
+    id: 'r7',
+    title: 'Soup',
+    ingredients: [chicken, carrot],
+    image: 'lib/assets/images/soup.jpg',
+  ),
+  Recipe(
+    id: 'r8',
+    title: 'Chicken rolls',
+    ingredients: [chicken, butter, flour],
+    image: 'lib/assets/images/chickenrolls.png',
+  ),
+  Recipe(
+    id: 'r9',
+    title: 'Creamy chicken',
+    ingredients: [chicken, butter, flour],
+    image: 'lib/assets/images/creamychicken.png',
   ),
 ];
