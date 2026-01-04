@@ -31,7 +31,7 @@ class _BottomNavTabState extends State<BottomNavTab> {
     return Scaffold(
       body: _pages[_currentIndex],
       bottomNavigationBar: BottomNavigationBar(
-        backgroundColor: const Color.fromARGB(255, 5, 223, 49),
+        backgroundColor: const Color.fromARGB(255, 20, 102, 57),
         currentIndex: _currentIndex,
         onTap: _onTabTapped,
         selectedItemColor: const Color.fromARGB(255, 255, 255, 255),
