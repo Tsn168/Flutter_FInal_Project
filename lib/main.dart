@@ -17,7 +17,7 @@
 // }
 
 // import 'package:flutter/material.dart';
-// import 'ui/pantry/pantry_page.dart'; // make sure this path is correct
+// import 'ui/pantry/pantry_page.dart';
 
 // void main() {
 //   runApp(const MyApp());
@@ -35,9 +35,28 @@
 //     );
 //   }
 // }
+// import 'package:flutter/material.dart';
+// import 'tab/tab_page.dart';
+// import 'package:mahopflex/ui/Welcome_Page/welcome_Page.dart';
+
+// void main() {
+//   runApp(const MyApp());
+// }
+
+// class MyApp extends StatelessWidget {
+//   const MyApp({super.key});
+
+//   @override
+//   Widget build(BuildContext context) {
+//     return const MaterialApp(
+//       debugShowCheckedModeBanner: false,
+//       home: const WelcomePage(),
+//     );
+//   }
+// }
 import 'package:flutter/material.dart';
+// import 'ui/pantry/pantry_page.dart';
 import 'tab/tab_page.dart';
-import 'package:mahopflex/ui/Welcome_Page/welcome_Page.dart';
 
 void main() {
   runApp(const MyApp());
@@ -48,9 +67,10 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
+    return MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: const WelcomePage(),
+      title: 'MahopFlex',
+      home: BottomNavTab(), // Use TabPage instead of PantryPage
     );
   }
 }
