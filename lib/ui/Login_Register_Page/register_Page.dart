@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import '../widgets/custom_button.dart';
 import 'login_Page.dart';
+import '../../services/auth_service.dart';
+import '../../tab/tab_page.dart';
 
 void main() {
   runApp(
@@ -19,8 +21,12 @@ class RegisterPage extends StatefulWidget {
 class _RegisterPageState extends State<RegisterPage> {
   final _formKey = GlobalKey<FormState>();
   bool _obscurePassword = true;
+  bool _obscureConfirmPassword = true;
+  bool _isLoading = false;
+  String? _username;
   String? _email;
   String? _password;
+  String? _confirmPassword;
 
   void _togglePasswordVisibility() {
     setState(() {
@@ -28,30 +34,77 @@ class _RegisterPageState extends State<RegisterPage> {
     });
   }
 
+  void _toggleConfirmPasswordVisibility() {
+    setState(() {
+      _obscureConfirmPassword = !_obscureConfirmPassword;
+    });
+  }
+
   void _handleBack() {
     Navigator.maybePop(context);
   }
 
-  void _handleLogin() {
+  Future<void> _handleRegister() async {
     if (_formKey.currentState?.validate() ?? false) {
       _formKey.currentState?.save();
-      // Handle login logic here
-      print('Email: $_email, Password: $_password');
-      // You can add authentication logic here
+      
+      // Additional validation
+      if (_password != _confirmPassword) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Passwords do not match'),
+            backgroundColor: Colors.red,
+          ),
+        );
+        return;
+      }
+      
+      setState(() {
+        _isLoading = true;
+      });
+      
+      // Call AuthService to register
+      final result = await AuthService.instance.register(
+        _email!,
+        _username!,
+        _password!,
+      );
+      
+      setState(() {
+        _isLoading = false;
+      });
+      
+      if (!mounted) return;
+      
+      if (result['success']) {
+        // Navigate to BottomNavTab on success
+        Navigator.pushAndRemoveUntil(
+          context,
+          MaterialPageRoute(builder: (context) => const BottomNavTab()),
+          (route) => false,
+        );
+      } else {
+        // Show error message
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(result['message'] ?? 'Registration failed'),
+            backgroundColor: Colors.red,
+          ),
+        );
+      }
     }
   }
 
-  void _handleForgotPassword() {
-    // Navigate to forgot password screen
-    print('Forgot password clicked');
-  }
-
-  void _handleRegister() {
+  void _handleLogin() {
     // Navigate to login screen
     Navigator.pushReplacement(
       context,
       MaterialPageRoute(builder: (context) => const LoginPage()),
     );
+  }
+
+  void _saveUsername(String? value) {
+    _username = value;
   }
 
   void _saveEmail(String? value) {
@@ -62,17 +115,26 @@ class _RegisterPageState extends State<RegisterPage> {
     _password = value;
   }
 
+  void _saveConfirmPassword(String? value) {
+    _confirmPassword = value;
+  }
+
   @override
   Widget build(BuildContext context) {
     return RegisterForm(
       formKey: _formKey,
       obscurePassword: _obscurePassword,
+      obscureConfirmPassword: _obscureConfirmPassword,
+      isLoading: _isLoading,
       onTogglePasswordVisibility: _togglePasswordVisibility,
+      onToggleConfirmPasswordVisibility: _toggleConfirmPasswordVisibility,
       onBackPressed: _handleBack,
-      onLoginPressed: _handleLogin,
       onRegisterPressed: _handleRegister,
+      onLoginPressed: _handleLogin,
+      onUsernameSaved: _saveUsername,
       onEmailSaved: _saveEmail,
       onPasswordSaved: _savePassword,
+      onConfirmPasswordSaved: _saveConfirmPassword,
     );
   }
 }
@@ -81,23 +143,33 @@ class _RegisterPageState extends State<RegisterPage> {
 class RegisterForm extends StatelessWidget {
   final GlobalKey<FormState> formKey;
   final bool obscurePassword;
+  final bool obscureConfirmPassword;
+  final bool isLoading;
   final VoidCallback onTogglePasswordVisibility;
+  final VoidCallback onToggleConfirmPasswordVisibility;
   final VoidCallback onBackPressed;
   final VoidCallback onLoginPressed;
   final VoidCallback onRegisterPressed;
+  final ValueChanged<String?>? onUsernameSaved;
   final ValueChanged<String?>? onEmailSaved;
   final ValueChanged<String?>? onPasswordSaved;
+  final ValueChanged<String?>? onConfirmPasswordSaved;
 
   const RegisterForm({
     Key? key,
     required this.formKey,
     required this.obscurePassword,
+    required this.obscureConfirmPassword,
+    required this.isLoading,
     required this.onTogglePasswordVisibility,
+    required this.onToggleConfirmPasswordVisibility,
     required this.onBackPressed,
     required this.onLoginPressed,
     required this.onRegisterPressed,
+    this.onUsernameSaved,
     this.onEmailSaved,
     this.onPasswordSaved,
+    this.onConfirmPasswordSaved,
   }) : super(key: key);
 
   @override
@@ -123,7 +195,7 @@ class RegisterForm extends StatelessWidget {
               ),
             ),
           ),
-          // Main rounded-top container with gradient and login content
+          // Main rounded-top container with gradient and register content
           Positioned(
             top: 100,
             left: 0,
@@ -190,7 +262,32 @@ class RegisterForm extends StatelessWidget {
                             ),
                           ],
                         ),
-                        const SizedBox(height: 30),
+                        const SizedBox(height: 20),
+                        // Warning banner
+                        Container(
+                          padding: const EdgeInsets.all(12),
+                          decoration: BoxDecoration(
+                            color: Colors.orange.shade100,
+                            borderRadius: BorderRadius.circular(8),
+                            border: Border.all(color: Colors.orange),
+                          ),
+                          child: Row(
+                            children: const [
+                              Icon(Icons.warning, color: Colors.orange),
+                              SizedBox(width: 8),
+                              Expanded(
+                                child: Text(
+                                  'Remember your password! Offline apps cannot recover passwords.',
+                                  style: TextStyle(
+                                    color: Colors.black87,
+                                    fontSize: 12,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        const SizedBox(height: 20),
                         Row(
                           children: [
                             const Icon(
@@ -209,11 +306,12 @@ class RegisterForm extends StatelessWidget {
                                   }
                                   return null;
                                 },
+                                onSaved: onUsernameSaved,
                               ),
                             ),
                           ],
                         ),
-                        const SizedBox(height: 25),
+                        const SizedBox(height: 20),
                         Row(
                           children: [
                             const Icon(
@@ -230,9 +328,7 @@ class RegisterForm extends StatelessWidget {
                                   if (value == null || value.isEmpty) {
                                     return 'Please enter your email';
                                   }
-                                  if (!RegExp(
-                                    r'^[^@]+@[^@]+\.[^@]+',
-                                  ).hasMatch(value)) {
+                                  if (!value.contains('@')) {
                                     return 'Please enter a valid email';
                                   }
                                   return null;
@@ -242,7 +338,7 @@ class RegisterForm extends StatelessWidget {
                             ),
                           ],
                         ),
-                        const SizedBox(height: 25),
+                        const SizedBox(height: 20),
                         Row(
                           children: [
                             const Icon(
@@ -284,17 +380,60 @@ class RegisterForm extends StatelessWidget {
                             ),
                           ],
                         ),
-                        const SizedBox(height: 40),
-                        CustomButton.text(
-                          text: "Register",
-                          onPressed: onLoginPressed,
-                          backgroundColor: const Color(0xFF1AE965),
-                          textColor: Colors.white,
-                          width: 250,
-                          height: 60,
-                          borderRadius: 20,
-                          elevation: 8,
+                        const SizedBox(height: 20),
+                        Row(
+                          children: [
+                            const Icon(
+                              Icons.key,
+                              color: Color.fromARGB(255, 107, 107, 107),
+                            ),
+                            const SizedBox(width: 8),
+                            Expanded(
+                              child: TextFormField(
+                                obscureText: obscureConfirmPassword,
+                                decoration: InputDecoration(
+                                  hintText: "Confirm Password",
+                                  suffixIcon: IconButton(
+                                    icon: Icon(
+                                      obscureConfirmPassword
+                                          ? Icons.visibility_off
+                                          : Icons.visibility,
+                                      color: const Color.fromARGB(
+                                        255,
+                                        107,
+                                        107,
+                                        107,
+                                      ),
+                                    ),
+                                    onPressed: onToggleConfirmPasswordVisibility,
+                                  ),
+                                ),
+                                validator: (value) {
+                                  if (value == null || value.isEmpty) {
+                                    return 'Please confirm your password';
+                                  }
+                                  return null;
+                                },
+                                onSaved: onConfirmPasswordSaved,
+                              ),
+                            ),
+                          ],
                         ),
+                        const SizedBox(height: 30),
+                        isLoading
+                            ? const CircularProgressIndicator(
+                                color: Colors.white,
+                              )
+                            : CustomButton.text(
+                                text: "Register",
+                                onPressed: onRegisterPressed,
+                                backgroundColor: const Color(0xFF1AE965),
+                                textColor: Colors.white,
+                                width: 250,
+                                height: 60,
+                                borderRadius: 20,
+                                elevation: 8,
+                              ),
                       ],
                     ),
                   ),
@@ -315,7 +454,7 @@ class RegisterForm extends StatelessWidget {
                   style: TextStyle(color: Colors.black, fontSize: 16),
                 ),
                 TextButton(
-                  onPressed: onRegisterPressed,
+                  onPressed: onLoginPressed,
                   child: const Text(
                     "Login",
                     style: TextStyle(color: Colors.white, fontSize: 16),
