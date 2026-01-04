@@ -46,11 +46,6 @@ class _LoginPageState extends State<LoginPage> {
     print('Forgot password clicked');
   }
 
-  void _handleGoogleLogin() {
-    // Handle Google login logic
-    print('Google login clicked');
-  }
-
   void _handleRegister() {
     // Navigate to registration screen
     Navigator.pushReplacement(
@@ -76,7 +71,6 @@ class _LoginPageState extends State<LoginPage> {
       onBackPressed: _handleBack,
       onLoginPressed: _handleLogin,
       onForgotPasswordPressed: _handleForgotPassword,
-      onGoogleLoginPressed: _handleGoogleLogin,
       onRegisterPressed: _handleRegister,
       onEmailSaved: _saveEmail,
       onPasswordSaved: _savePassword,
@@ -92,7 +86,6 @@ class LoginForm extends StatelessWidget {
   final VoidCallback onBackPressed;
   final VoidCallback onLoginPressed;
   final VoidCallback onForgotPasswordPressed;
-  final VoidCallback onGoogleLoginPressed;
   final VoidCallback onRegisterPressed;
   final ValueChanged<String?>? onEmailSaved;
   final ValueChanged<String?>? onPasswordSaved;
@@ -105,7 +98,6 @@ class LoginForm extends StatelessWidget {
     required this.onBackPressed,
     required this.onLoginPressed,
     required this.onForgotPasswordPressed,
-    required this.onGoogleLoginPressed,
     required this.onRegisterPressed,
     this.onEmailSaved,
     this.onPasswordSaved,
@@ -291,63 +283,33 @@ class LoginForm extends StatelessWidget {
                             style: TextStyle(color: Colors.black, fontSize: 16),
                           ),
                         ),
-                        const SizedBox(height: 20),
-                        Row(
-                          children: [
-                            Expanded(
-                              child: Divider(color: Colors.black, thickness: 1),
-                            ),
-                            const Padding(
-                              padding: EdgeInsets.symmetric(horizontal: 10),
-                              child: Text("or"),
-                            ),
-                            Expanded(
-                              child: Divider(color: Colors.black, thickness: 1),
-                            ),
-                          ],
-                        ),
-                        const SizedBox(height: 20),
-                        const Text(
-                          "Login with Google",
-                          style: TextStyle(color: Colors.black, fontSize: 16),
-                        ),
-                        const SizedBox(height: 10),
-                        TextButton(
-                          onPressed: onGoogleLoginPressed,
-                          child: Image.asset(
-                            '/Users/macbook/CADT/Flutter/Flutter_FInal_Project/lib/assets/images/search.png',
-                            width: 20,
-                            height: 20,
-                          ),
-                        ),
-                        const SizedBox(height: 10),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            const Text(
-                              "Don't have an account?",
-                              style: TextStyle(
-                                color: Colors.black,
-                                fontSize: 16,
-                              ),
-                            ),
-                            TextButton(
-                              onPressed: onRegisterPressed,
-                              child: const Text(
-                                "Register",
-                                style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 16,
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
                       ],
                     ),
                   ),
                 ),
               ),
+            ),
+          ),
+          // Bottom account text
+          Positioned(
+            bottom: 30,
+            left: 0,
+            right: 0,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                const Text(
+                  "Don't have an account?",
+                  style: TextStyle(color: Colors.black, fontSize: 16),
+                ),
+                TextButton(
+                  onPressed: onRegisterPressed,
+                  child: const Text(
+                    "Register",
+                    style: TextStyle(color: Colors.white, fontSize: 16),
+                  ),
+                ),
+              ],
             ),
           ),
         ],

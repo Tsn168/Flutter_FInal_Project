@@ -46,11 +46,6 @@ class _RegisterPageState extends State<RegisterPage> {
     print('Forgot password clicked');
   }
 
-  void _handleGoogleLogin() {
-    // Handle Google login logic
-    print('Google login clicked');
-  }
-
   void _handleRegister() {
     // Navigate to login screen
     Navigator.pushReplacement(
@@ -75,8 +70,6 @@ class _RegisterPageState extends State<RegisterPage> {
       onTogglePasswordVisibility: _togglePasswordVisibility,
       onBackPressed: _handleBack,
       onLoginPressed: _handleLogin,
-      onForgotPasswordPressed: _handleForgotPassword,
-      onGoogleLoginPressed: _handleGoogleLogin,
       onRegisterPressed: _handleRegister,
       onEmailSaved: _saveEmail,
       onPasswordSaved: _savePassword,
@@ -91,8 +84,6 @@ class RegisterForm extends StatelessWidget {
   final VoidCallback onTogglePasswordVisibility;
   final VoidCallback onBackPressed;
   final VoidCallback onLoginPressed;
-  final VoidCallback onForgotPasswordPressed;
-  final VoidCallback onGoogleLoginPressed;
   final VoidCallback onRegisterPressed;
   final ValueChanged<String?>? onEmailSaved;
   final ValueChanged<String?>? onPasswordSaved;
@@ -104,8 +95,6 @@ class RegisterForm extends StatelessWidget {
     required this.onTogglePasswordVisibility,
     required this.onBackPressed,
     required this.onLoginPressed,
-    required this.onForgotPasswordPressed,
-    required this.onGoogleLoginPressed,
     required this.onRegisterPressed,
     this.onEmailSaved,
     this.onPasswordSaved,
@@ -168,6 +157,7 @@ class RegisterForm extends StatelessWidget {
                   child: Form(
                     key: formKey,
                     child: Column(
+                      mainAxisSize: MainAxisSize.min,
                       children: [
                         Row(
                           crossAxisAlignment: CrossAxisAlignment.start,
@@ -223,7 +213,7 @@ class RegisterForm extends StatelessWidget {
                             ),
                           ],
                         ),
-                        const SizedBox(height: 30),
+                        const SizedBox(height: 25),
                         Row(
                           children: [
                             const Icon(
@@ -252,7 +242,7 @@ class RegisterForm extends StatelessWidget {
                             ),
                           ],
                         ),
-                        const SizedBox(height: 30),
+                        const SizedBox(height: 25),
                         Row(
                           children: [
                             const Icon(
@@ -305,63 +295,33 @@ class RegisterForm extends StatelessWidget {
                           borderRadius: 20,
                           elevation: 8,
                         ),
-                        const SizedBox(height: 20),
-                        Row(
-                          children: [
-                            Expanded(
-                              child: Divider(color: Colors.black, thickness: 1),
-                            ),
-                            const Padding(
-                              padding: EdgeInsets.symmetric(horizontal: 10),
-                              child: Text("or"),
-                            ),
-                            Expanded(
-                              child: Divider(color: Colors.black, thickness: 1),
-                            ),
-                          ],
-                        ),
-                        const SizedBox(height: 20),
-                        const Text(
-                          "Login with Google",
-                          style: TextStyle(color: Colors.black, fontSize: 16),
-                        ),
-                        const SizedBox(height: 10),
-                        TextButton(
-                          onPressed: onGoogleLoginPressed,
-                          child: Image.asset(
-                            '/Users/macbook/CADT/Flutter/Flutter_FInal_Project/lib/assets/images/search.png',
-                            width: 20,
-                            height: 20,
-                          ),
-                        ),
-                        const SizedBox(height: 10),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            const Text(
-                              "Already have an account?",
-                              style: TextStyle(
-                                color: Colors.black,
-                                fontSize: 16,
-                              ),
-                            ),
-                            TextButton(
-                              onPressed: onRegisterPressed,
-                              child: const Text(
-                                "Login",
-                                style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 16,
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
                       ],
                     ),
                   ),
                 ),
               ),
+            ),
+          ),
+          // Bottom account text
+          Positioned(
+            bottom: 30,
+            left: 0,
+            right: 0,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                const Text(
+                  "Already have an account?",
+                  style: TextStyle(color: Colors.black, fontSize: 16),
+                ),
+                TextButton(
+                  onPressed: onRegisterPressed,
+                  child: const Text(
+                    "Login",
+                    style: TextStyle(color: Colors.white, fontSize: 16),
+                  ),
+                ),
+              ],
             ),
           ),
         ],
