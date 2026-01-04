@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import '../widgets/custom_button.dart';
 import 'register_Page.dart';
+import '../../services/auth_service.dart';
+import '../../tab/tab_page.dart';
 
 void main() {
   runApp(
@@ -19,6 +21,7 @@ class LoginPage extends StatefulWidget {
 class _LoginPageState extends State<LoginPage> {
   final _formKey = GlobalKey<FormState>();
   bool _obscurePassword = true;
+  bool _isLoading = false;
   String? _email;
   String? _password;
 
@@ -32,23 +35,40 @@ class _LoginPageState extends State<LoginPage> {
     Navigator.maybePop(context);
   }
 
-  void _handleLogin() {
+  Future<void> _handleLogin() async {
     if (_formKey.currentState?.validate() ?? false) {
       _formKey.currentState?.save();
-      // Handle login logic here
-      print('Email: $_email, Password: $_password');
-      // You can add authentication logic here
+      
+      setState(() {
+        _isLoading = true;
+      });
+      
+      // Call AuthService to login
+      final result = await AuthService.instance.login(_email!, _password!);
+      
+      setState(() {
+        _isLoading = false;
+      });
+      
+      if (!mounted) return;
+      
+      if (result['success']) {
+        // Navigate to BottomNavTab on success
+        Navigator.pushAndRemoveUntil(
+          context,
+          MaterialPageRoute(builder: (context) => const BottomNavTab()),
+          (route) => false,
+        );
+      } else {
+        // Show error message
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Invalid email or password'),
+            backgroundColor: Colors.red,
+          ),
+        );
+      }
     }
-  }
-
-  void _handleForgotPassword() {
-    // Navigate to forgot password screen
-    print('Forgot password clicked');
-  }
-
-  void _handleGoogleLogin() {
-    // Handle Google login logic
-    print('Google login clicked');
   }
 
   void _handleRegister() {
@@ -72,11 +92,10 @@ class _LoginPageState extends State<LoginPage> {
     return LoginForm(
       formKey: _formKey,
       obscurePassword: _obscurePassword,
+      isLoading: _isLoading,
       onTogglePasswordVisibility: _togglePasswordVisibility,
       onBackPressed: _handleBack,
       onLoginPressed: _handleLogin,
-      onForgotPasswordPressed: _handleForgotPassword,
-      onGoogleLoginPressed: _handleGoogleLogin,
       onRegisterPressed: _handleRegister,
       onEmailSaved: _saveEmail,
       onPasswordSaved: _savePassword,
@@ -88,11 +107,10 @@ class _LoginPageState extends State<LoginPage> {
 class LoginForm extends StatelessWidget {
   final GlobalKey<FormState> formKey;
   final bool obscurePassword;
+  final bool isLoading;
   final VoidCallback onTogglePasswordVisibility;
   final VoidCallback onBackPressed;
   final VoidCallback onLoginPressed;
-  final VoidCallback onForgotPasswordPressed;
-  final VoidCallback onGoogleLoginPressed;
   final VoidCallback onRegisterPressed;
   final ValueChanged<String?>? onEmailSaved;
   final ValueChanged<String?>? onPasswordSaved;
@@ -101,11 +119,10 @@ class LoginForm extends StatelessWidget {
     super.key,
     required this.formKey,
     required this.obscurePassword,
+    required this.isLoading,
     required this.onTogglePasswordVisibility,
     required this.onBackPressed,
     required this.onLoginPressed,
-    required this.onForgotPasswordPressed,
-    required this.onGoogleLoginPressed,
     required this.onRegisterPressed,
     this.onEmailSaved,
     this.onPasswordSaved,
@@ -272,82 +289,48 @@ class LoginForm extends StatelessWidget {
                           ],
                         ),
                         const SizedBox(height: 40),
-                        CustomButton.text(
-                          text: "Login",
-                          onPressed: onLoginPressed,
-                          backgroundColor: const Color(0xFF1AE965),
-                          textColor: Colors.white,
-                          width: 250,
-                          height: 60,
-                          fontSize: 30,
-                          borderRadius: 20,
-                          elevation: 8,
-                        ),
-                        const SizedBox(height: 20),
-                        TextButton(
-                          onPressed: onForgotPasswordPressed,
-                          child: const Text(
-                            "Forgot Password?",
-                            style: TextStyle(color: Colors.black, fontSize: 16),
-                          ),
-                        ),
-                        const SizedBox(height: 20),
-                        Row(
-                          children: [
-                            Expanded(
-                              child: Divider(color: Colors.black, thickness: 1),
-                            ),
-                            const Padding(
-                              padding: EdgeInsets.symmetric(horizontal: 10),
-                              child: Text("or"),
-                            ),
-                            Expanded(
-                              child: Divider(color: Colors.black, thickness: 1),
-                            ),
-                          ],
-                        ),
-                        const SizedBox(height: 20),
-                        const Text(
-                          "Login with Google",
-                          style: TextStyle(color: Colors.black, fontSize: 16),
-                        ),
-                        const SizedBox(height: 10),
-                        TextButton(
-                          onPressed: onGoogleLoginPressed,
-                          child: Image.asset(
-                            '/Users/macbook/CADT/Flutter/Flutter_FInal_Project/lib/assets/images/search.png',
-                            width: 20,
-                            height: 20,
-                          ),
-                        ),
-                        const SizedBox(height: 10),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            const Text(
-                              "Don't have an account?",
-                              style: TextStyle(
-                                color: Colors.black,
-                                fontSize: 16,
+                        isLoading
+                            ? const CircularProgressIndicator(
+                                color: Colors.white,
+                              )
+                            : CustomButton.text(
+                                text: "Login",
+                                onPressed: onLoginPressed,
+                                backgroundColor: const Color(0xFF1AE965),
+                                textColor: Colors.white,
+                                width: 250,
+                                height: 60,
+                                fontSize: 30,
+                                borderRadius: 20,
+                                elevation: 8,
                               ),
-                            ),
-                            TextButton(
-                              onPressed: onRegisterPressed,
-                              child: const Text(
-                                "Register",
-                                style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 16,
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
                       ],
                     ),
                   ),
                 ),
               ),
+            ),
+          ),
+          // Bottom account text
+          Positioned(
+            bottom: 30,
+            left: 0,
+            right: 0,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                const Text(
+                  "Don't have an account?",
+                  style: TextStyle(color: Colors.black, fontSize: 16),
+                ),
+                TextButton(
+                  onPressed: onRegisterPressed,
+                  child: const Text(
+                    "Register",
+                    style: TextStyle(color: Colors.white, fontSize: 16),
+                  ),
+                ),
+              ],
             ),
           ),
         ],
