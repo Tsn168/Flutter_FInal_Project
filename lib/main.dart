@@ -1,20 +1,20 @@
-// import 'package:flutter/material.dart';
-// import 'ui/main/main_screen.dart';
+import 'package:flutter/material.dart';
+import 'ui/main/main_screen.dart';
 
-// void main() {
-//   runApp(const MyApp());
-// }
+void main() {
+  runApp(const MyApp());
+}
 
-// class MyApp extends StatelessWidget {
-//   const MyApp({super.key});
+class MyApp extends StatelessWidget {
+  const MyApp({super.key});
 
-//   @override
-//   Widget build(BuildContext context) {
-//     return const MaterialApp(
-//       home: MainScreen(), // currently Main Page
-//     );
-//   }
-// }
+  @override
+  Widget build(BuildContext context) {
+    return const MaterialApp(
+      home: MainScreen(), // currently Main Page
+    );
+  }
+}
 
 // import 'package:flutter/material.dart';
 // import 'ui/pantry/pantry_page.dart';
@@ -54,23 +54,23 @@
 //     );
 //   }
 // }
-import 'package:flutter/material.dart';
-// import 'ui/pantry/pantry_page.dart';
-import 'tab/tab_page.dart';
+// import 'package:flutter/material.dart';
+// // import 'ui/pantry/pantry_page.dart';
+// import 'tab/tab_page.dart';
 
-void main() {
-  runApp(const MyApp());
-}
+// void main() {
+//   runApp(const MyApp());
+// }
 
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+// class MyApp extends StatelessWidget {
+//   const MyApp({super.key});
 
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      title: 'MahopFlex',
-      home: BottomNavTab(), // Use TabPage instead of PantryPage
-    );
-  }
-}
+//   @override
+//   Widget build(BuildContext context) {
+//     return MaterialApp(
+//       debugShowCheckedModeBanner: false,
+//       title: 'MahopFlex',
+//       home: BottomNavTab(), // Use TabPage instead of PantryPage
+//     );
+//   }
+// }
