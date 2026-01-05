@@ -85,7 +85,7 @@ class CustomButton extends StatelessWidget {
     bool iconLeft = true,
     double iconSize = 20,
     double spacing = 8,
-    double elevation = 2,
+    double elevation = 2, required int fontSize,
   }) {
     final hasGradient = gradientColors != null && gradientColors.isNotEmpty;
     final bgColor = backgroundColor ?? Colors.blue;

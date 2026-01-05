@@ -1,13 +1,11 @@
 import 'package:flutter/material.dart';
 import '../../models/recipe.dart';
+import '../widgets/custom_button.dart';
 
 class RecipeDetailPage extends StatefulWidget {
   final Recipe recipe;
 
-  const RecipeDetailPage({
-    super.key,
-    required this.recipe,
-  });
+  const RecipeDetailPage({super.key, required this.recipe});
 
   @override
   State<RecipeDetailPage> createState() => _RecipeDetailPageState();
@@ -41,7 +39,9 @@ class _RecipeDetailPageState extends State<RecipeDetailPage> {
   void _startCooking() {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
-        content: Text('Starting to cook ${widget.recipe.title} for $_currentServings people!'),
+        content: Text(
+          'Starting to cook ${widget.recipe.title} for $_currentServings people!',
+        ),
         backgroundColor: Colors.green,
       ),
     );
@@ -49,7 +49,9 @@ class _RecipeDetailPageState extends State<RecipeDetailPage> {
 
   @override
   Widget build(BuildContext context) {
-    final scaledIngredients = widget.recipe.getScaledIngredients(_currentServings);
+    final scaledIngredients = widget.recipe.getScaledIngredients(
+      _currentServings,
+    );
     final scaledTime = widget.recipe.getScaledTime(_currentServings);
     final totalCalories = widget.recipe.getTotalCalories(_currentServings);
 
@@ -58,9 +60,16 @@ class _RecipeDetailPageState extends State<RecipeDetailPage> {
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0,
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: Color(0xFF2C2C2C)),
-          onPressed: () => Navigator.pop(context),
+        leading: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: CustomButton.iconOnly(
+            icon: Icons.arrow_back,
+            onPressed: () => Navigator.pop(context),
+            backgroundColor: Colors.transparent,
+            iconColor: const Color(0xFF2C2C2C),
+            size: 40,
+            elevation: 0,
+          ),
         ),
         title: Text(
           widget.recipe.title,
@@ -82,7 +91,7 @@ class _RecipeDetailPageState extends State<RecipeDetailPage> {
               height: 250,
               fit: BoxFit.cover,
             ),
-            
+
             Padding(
               padding: const EdgeInsets.all(16),
               child: Column(
@@ -98,7 +107,7 @@ class _RecipeDetailPageState extends State<RecipeDetailPage> {
                     ),
                   ),
                   const SizedBox(height: 16),
-                  
+
                   // Serving Size Selector
                   Card(
                     elevation: 2,
@@ -117,10 +126,13 @@ class _RecipeDetailPageState extends State<RecipeDetailPage> {
                             ),
                           ),
                           const SizedBox(width: 16),
-                          IconButton(
+                          CustomButton.iconOnly(
+                            icon: Icons.remove_circle_outline,
                             onPressed: _decrementServings,
-                            icon: const Icon(Icons.remove_circle_outline),
-                            color: Colors.red,
+                            backgroundColor: Colors.transparent,
+                            iconColor: Colors.red,
+                            size: 40,
+                            elevation: 0,
                           ),
                           Container(
                             padding: const EdgeInsets.symmetric(
@@ -139,17 +151,20 @@ class _RecipeDetailPageState extends State<RecipeDetailPage> {
                               ),
                             ),
                           ),
-                          IconButton(
+                          CustomButton.iconOnly(
+                            icon: Icons.add_circle_outline,
                             onPressed: _incrementServings,
-                            icon: const Icon(Icons.add_circle_outline),
-                            color: Colors.green,
+                            backgroundColor: Colors.transparent,
+                            iconColor: Colors.green,
+                            size: 40,
+                            elevation: 0,
                           ),
                         ],
                       ),
                     ),
                   ),
                   const SizedBox(height: 16),
-                  
+
                   // Info Cards (Time, Difficulty, Calories)
                   Row(
                     children: [
@@ -182,7 +197,7 @@ class _RecipeDetailPageState extends State<RecipeDetailPage> {
                     ],
                   ),
                   const SizedBox(height: 24),
-                  
+
                   // Ingredients Section
                   const Text(
                     'Ingredients',
@@ -218,7 +233,7 @@ class _RecipeDetailPageState extends State<RecipeDetailPage> {
                     );
                   }).toList(),
                   const SizedBox(height: 24),
-                  
+
                   // Instructions Section
                   const Text(
                     'Instructions',
@@ -243,29 +258,20 @@ class _RecipeDetailPageState extends State<RecipeDetailPage> {
                     ),
                   ),
                   const SizedBox(height: 24),
-                  
+
                   // Start Cooking Button
-                  SizedBox(
+                  CustomButton.iconText(
+                    icon: Icons.restaurant,
+                    text: 'Start Cooking',
+                    onPressed: _startCooking,
+                    backgroundColor: const Color(0xFF4CAF50),
+                    textColor: Colors.white,
+                    iconColor: Colors.white,
                     width: double.infinity,
                     height: 56,
-                    child: ElevatedButton.icon(
-                      onPressed: _startCooking,
-                      icon: const Icon(Icons.restaurant, color: Colors.white),
-                      label: const Text(
-                        'Start Cooking',
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: const Color(0xFF4CAF50),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(12),
-                        ),
-                      ),
-                    ),
+                    borderRadius: 12,
+                    fontSize: 18,
+                    elevation: 2,
                   ),
                   const SizedBox(height: 16),
                 ],
@@ -293,10 +299,7 @@ class _RecipeDetailPageState extends State<RecipeDetailPage> {
             const SizedBox(height: 4),
             Text(
               label,
-              style: TextStyle(
-                fontSize: 12,
-                color: Colors.grey[600],
-              ),
+              style: TextStyle(fontSize: 12, color: Colors.grey[600]),
             ),
             const SizedBox(height: 4),
             Text(
