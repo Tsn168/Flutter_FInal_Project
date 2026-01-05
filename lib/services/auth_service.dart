@@ -19,7 +19,10 @@ class AuthService {
 
   // Register new user
   Future<Map<String, dynamic>> register(
-      String email, String username, String password) async {
+    String email,
+    String username,
+    String password,
+  ) async {
     try {
       // Check if user already exists
       final existingUser = await _dbHelper.getUserByEmail(email);
@@ -36,7 +39,6 @@ class AuthService {
         username: username,
         email: email,
         passwordHash: passwordHash,
-        createdAt: DateTime.now().millisecondsSinceEpoch,
       );
 
       await _dbHelper.createUser(user);

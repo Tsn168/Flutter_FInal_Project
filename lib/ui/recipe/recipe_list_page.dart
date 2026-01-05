@@ -6,10 +6,7 @@ import 'recipe_detail_page.dart';
 class RecipeListPage extends StatelessWidget {
   final List<String> availableIngredients;
 
-  const RecipeListPage({
-    super.key,
-    required this.availableIngredients,
-  });
+  const RecipeListPage({super.key, required this.availableIngredients});
 
   @override
   Widget build(BuildContext context) {
@@ -20,7 +17,9 @@ class RecipeListPage extends StatelessWidget {
     }).toList();
 
     // Sort by match percentage (highest first)
-    recipesWithMatch.sort((a, b) => (b['match'] as double).compareTo(a['match'] as double));
+    recipesWithMatch.sort(
+      (a, b) => (b['match'] as double).compareTo(a['match'] as double),
+    );
 
     return Scaffold(
       backgroundColor: const Color(0xFFF8FFF9),
@@ -47,7 +46,7 @@ class RecipeListPage extends StatelessWidget {
           final item = recipesWithMatch[index];
           final recipe = item['recipe'] as Recipe;
           final matchPercentage = item['match'] as double;
-          
+
           // Calculate matched ingredients count
           int matchedCount = 0;
           for (var ingredient in recipe.ingredients) {
@@ -55,12 +54,12 @@ class RecipeListPage extends StatelessWidget {
               matchedCount++;
             }
           }
-          
+
           // Determine match status
           Color matchColor;
           String matchLabel;
           IconData matchIcon;
-          
+
           if (matchPercentage == 100) {
             matchColor = Colors.green;
             matchLabel = 'Perfect Match';
@@ -74,7 +73,7 @@ class RecipeListPage extends StatelessWidget {
             matchLabel = 'Low Match';
             matchIcon = Icons.warning;
           }
-          
+
           return Card(
             color: const Color(0xFFFDFDFD),
             elevation: 3,
@@ -107,7 +106,7 @@ class RecipeListPage extends StatelessWidget {
                       ),
                     ),
                     const SizedBox(width: 12),
-                    
+
                     // Recipe info
                     Expanded(
                       child: Column(
@@ -160,26 +159,12 @@ class RecipeListPage extends StatelessWidget {
                                   fontSize: 12,
                                 ),
                               ),
-                              const SizedBox(width: 12),
-                              Icon(
-                                Icons.signal_cellular_alt,
-                                size: 14,
-                                color: Colors.grey[600],
-                              ),
-                              const SizedBox(width: 4),
-                              Text(
-                                recipe.difficulty,
-                                style: TextStyle(
-                                  color: Colors.grey[600],
-                                  fontSize: 12,
-                                ),
-                              ),
                             ],
                           ),
                         ],
                       ),
                     ),
-                    
+
                     // Match percentage
                     Container(
                       padding: const EdgeInsets.symmetric(

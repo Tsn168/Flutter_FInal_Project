@@ -1,5 +1,4 @@
 import 'ingredient.dart';
-import 'dart:math';
 
 class Recipe {
   final String id;
@@ -8,9 +7,7 @@ class Recipe {
   final String image;
   final int baseServings;
   final int timeMinutes;
-  final String difficulty;
   final int caloriesPerServing;
-  final String instructions;
 
   Recipe({
     required this.id,
@@ -19,9 +16,7 @@ class Recipe {
     required this.image,
     this.baseServings = 2,
     this.timeMinutes = 30,
-    this.difficulty = 'Medium',
     this.caloriesPerServing = 300,
-    this.instructions = '',
   });
 
   // Scale ingredient quantities based on target servings
@@ -54,14 +49,14 @@ class Recipe {
   // Calculate recipe match percentage based on available ingredients
   double getMatchPercentage(List<String> availableIngredients) {
     if (ingredients.isEmpty) return 0.0;
-    
+
     int matchCount = 0;
     for (var ingredient in ingredients) {
       if (availableIngredients.contains(ingredient.name)) {
         matchCount++;
       }
     }
-    
+
     return (matchCount / ingredients.length) * 100;
   }
 
@@ -73,23 +68,22 @@ class Recipe {
       'image': image,
       'base_servings': baseServings,
       'time_minutes': timeMinutes,
-      'difficulty': difficulty,
       'calories_per_serving': caloriesPerServing,
-      'instructions': instructions,
     };
   }
 
   // Create Recipe from Map (database SELECT)
-  factory Recipe.fromMap(Map<String, dynamic> map, List<Ingredient> ingredients) {
+  factory Recipe.fromMap(
+    Map<String, dynamic> map,
+    List<Ingredient> ingredients,
+  ) {
     return Recipe(
       id: map['id'] as String,
       title: map['title'] as String,
       image: map['image'] as String,
       baseServings: map['base_servings'] as int,
       timeMinutes: map['time_minutes'] as int,
-      difficulty: map['difficulty'] as String,
       caloriesPerServing: map['calories_per_serving'] as int,
-      instructions: map['instructions'] as String,
       ingredients: ingredients,
     );
   }

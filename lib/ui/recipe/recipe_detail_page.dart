@@ -165,7 +165,7 @@ class _RecipeDetailPageState extends State<RecipeDetailPage> {
                   ),
                   const SizedBox(height: 16),
 
-                  // Info Cards (Time, Difficulty, Calories)
+                  // Info Cards (Time, Calories)
                   Row(
                     children: [
                       Expanded(
@@ -174,15 +174,6 @@ class _RecipeDetailPageState extends State<RecipeDetailPage> {
                           label: 'Time',
                           value: '$scaledTime min',
                           color: Colors.blue,
-                        ),
-                      ),
-                      const SizedBox(width: 8),
-                      Expanded(
-                        child: _buildInfoCard(
-                          icon: Icons.signal_cellular_alt,
-                          label: 'Difficulty',
-                          value: widget.recipe.difficulty,
-                          color: Colors.orange,
                         ),
                       ),
                       const SizedBox(width: 8),
@@ -232,31 +223,6 @@ class _RecipeDetailPageState extends State<RecipeDetailPage> {
                       ),
                     );
                   }).toList(),
-                  const SizedBox(height: 24),
-
-                  // Instructions Section
-                  const Text(
-                    'Instructions',
-                    style: TextStyle(
-                      fontSize: 22,
-                      fontWeight: FontWeight.bold,
-                      color: Color(0xFF2C2C2C),
-                    ),
-                  ),
-                  const SizedBox(height: 12),
-                  Card(
-                    child: Padding(
-                      padding: const EdgeInsets.all(16),
-                      child: Text(
-                        widget.recipe.instructions,
-                        style: const TextStyle(
-                          fontSize: 15,
-                          height: 1.6,
-                          color: Color(0xFF2C2C2C),
-                        ),
-                      ),
-                    ),
-                  ),
                   const SizedBox(height: 24),
 
                   // Start Cooking Button

@@ -92,7 +92,6 @@ class _UserSettingState extends State<UserSetting> {
         username: _usernameController.text,
         email: _currentUser.email,
         passwordHash: _currentUser.passwordHash,
-        createdAt: _currentUser.createdAt,
         profileImage: imagePath,
       );
 

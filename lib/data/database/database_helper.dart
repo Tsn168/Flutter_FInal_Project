@@ -23,7 +23,7 @@ class DatabaseHelper {
 
     return await openDatabase(
       path,
-      version: 2,
+      version: 3,
       onCreate: _createDB,
       onUpgrade: _upgradeDB,
     );
@@ -35,8 +35,51 @@ class DatabaseHelper {
       try {
         await db.execute('ALTER TABLE users ADD COLUMN profile_image TEXT');
       } catch (e) {
-        // Column might already exist
         print('Migration: profile_image column already exists or error: $e');
+      }
+    }
+    if (oldVersion < 3) {
+      // Remove unused columns from recipes table
+      try {
+        // SQLite doesn't support DROP COLUMN directly, so we recreate the table
+        await db.execute('''
+          CREATE TABLE recipes_new (
+            id TEXT PRIMARY KEY,
+            title TEXT NOT NULL,
+            image TEXT NOT NULL,
+            base_servings INTEGER NOT NULL,
+            time_minutes INTEGER NOT NULL,
+            calories_per_serving INTEGER NOT NULL
+          )
+        ''');
+        await db.execute('''
+          INSERT INTO recipes_new (id, title, image, base_servings, time_minutes, calories_per_serving)
+          SELECT id, title, image, base_servings, time_minutes, calories_per_serving FROM recipes
+        ''');
+        await db.execute('DROP TABLE recipes');
+        await db.execute('ALTER TABLE recipes_new RENAME TO recipes');
+      } catch (e) {
+        print('Migration: Error updating recipes table: $e');
+      }
+      try {
+        // Remove created_at column from users table
+        await db.execute('''
+          CREATE TABLE users_new (
+            id TEXT PRIMARY KEY,
+            email TEXT NOT NULL,
+            username TEXT NOT NULL,
+            password_hash TEXT NOT NULL,
+            profile_image TEXT
+          )
+        ''');
+        await db.execute('''
+          INSERT INTO users_new (id, email, username, password_hash, profile_image)
+          SELECT id, email, username, password_hash, profile_image FROM users
+        ''');
+        await db.execute('DROP TABLE users');
+        await db.execute('ALTER TABLE users_new RENAME TO users');
+      } catch (e) {
+        print('Migration: Error updating users table: $e');
       }
     }
   }
@@ -50,11 +93,10 @@ class DatabaseHelper {
     // Users table
     await db.execute('''
       CREATE TABLE users (
-        id $idType,
-        email $textType,
-        username $textType,
-        password_hash $textType,
-        created_at $intType,
+        id TEXT PRIMARY KEY,
+        email TEXT NOT NULL,
+        username TEXT NOT NULL,
+        password_hash TEXT NOT NULL,
         profile_image TEXT
       )
     ''');
@@ -79,9 +121,7 @@ class DatabaseHelper {
         image $textType,
         base_servings $intType,
         time_minutes $intType,
-        difficulty $textType,
-        calories_per_serving $intType,
-        instructions $textType
+        calories_per_serving $intType
       )
     ''');
 

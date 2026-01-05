@@ -3,7 +3,6 @@ class User {
   final String username;
   final String email;
   final String passwordHash;
-  final int createdAt;
   final String? profileImage;
 
   User({
@@ -11,7 +10,6 @@ class User {
     required this.username,
     required this.email,
     required this.passwordHash,
-    required this.createdAt,
     this.profileImage,
   });
 
@@ -22,7 +20,6 @@ class User {
       'email': email,
       'username': username,
       'password_hash': passwordHash,
-      'created_at': createdAt,
       'profile_image': profileImage,
     };
   }
@@ -34,7 +31,6 @@ class User {
       email: map['email'] as String,
       username: map['username'] as String,
       passwordHash: map['password_hash'] as String,
-      createdAt: map['created_at'] as int,
       profileImage: map['profile_image'] as String?,
     );
   }
