@@ -23,9 +23,22 @@ class DatabaseHelper {
 
     return await openDatabase(
       path,
-      version: 1,
+      version: 2,
       onCreate: _createDB,
+      onUpgrade: _upgradeDB,
     );
+  }
+
+  Future<void> _upgradeDB(Database db, int oldVersion, int newVersion) async {
+    if (oldVersion < 2) {
+      // Add profile_image column if it doesn't exist
+      try {
+        await db.execute('ALTER TABLE users ADD COLUMN profile_image TEXT');
+      } catch (e) {
+        // Column might already exist
+        print('Migration: profile_image column already exists or error: $e');
+      }
+    }
   }
 
   Future<void> _createDB(Database db, int version) async {
@@ -41,7 +54,8 @@ class DatabaseHelper {
         email $textType,
         username $textType,
         password_hash $textType,
-        created_at $intType
+        created_at $intType,
+        profile_image TEXT
       )
     ''');
 
@@ -107,16 +121,22 @@ class DatabaseHelper {
 
   Future<User?> getUserById(String id) async {
     final db = await database;
-    final maps = await db.query(
-      'users',
-      where: 'id = ?',
-      whereArgs: [id],
-    );
+    final maps = await db.query('users', where: 'id = ?', whereArgs: [id]);
 
     if (maps.isNotEmpty) {
       return User.fromMap(maps.first);
     }
     return null;
+  }
+
+  Future<void> updateUser(User user) async {
+    final db = await database;
+    await db.update(
+      'users',
+      user.toMap(),
+      where: 'id = ?',
+      whereArgs: [user.id],
+    );
   }
 
   // ===== USER PANTRY OPERATIONS =====
@@ -142,20 +162,16 @@ class DatabaseHelper {
 
   Future<void> deleteUserPantryItem(String id) async {
     final db = await database;
-    await db.delete(
-      'user_pantry',
-      where: 'id = ?',
-      whereArgs: [id],
-    );
+    await db.delete('user_pantry', where: 'id = ?', whereArgs: [id]);
   }
 
   // ===== RECIPE OPERATIONS =====
   Future<void> createRecipe(Recipe recipe) async {
     final db = await database;
-    
+
     // Insert recipe
     await db.insert('recipes', recipe.toMap());
-    
+
     // Insert recipe ingredients
     for (var ingredient in recipe.ingredients) {
       await db.insert('recipe_ingredients', {
@@ -171,7 +187,7 @@ class DatabaseHelper {
   Future<List<Recipe>> getAllRecipes() async {
     final db = await database;
     final recipeMaps = await db.query('recipes');
-    
+
     List<Recipe> recipes = [];
     for (var recipeMap in recipeMaps) {
       // Get ingredients for this recipe
@@ -180,7 +196,7 @@ class DatabaseHelper {
         where: 'recipe_id = ?',
         whereArgs: [recipeMap['id']],
       );
-      
+
       List<Ingredient> ingredients = ingredientMaps.map((map) {
         return Ingredient(
           id: map['id'] as String,
@@ -190,10 +206,10 @@ class DatabaseHelper {
           image: '', // Will be set from dummy data
         );
       }).toList();
-      
+
       recipes.add(Recipe.fromMap(recipeMap, ingredients));
     }
-    
+
     return recipes;
   }
 
@@ -204,16 +220,16 @@ class DatabaseHelper {
       where: 'id = ?',
       whereArgs: [id],
     );
-    
+
     if (recipeMaps.isEmpty) return null;
-    
+
     final recipeMap = recipeMaps.first;
     final ingredientMaps = await db.query(
       'recipe_ingredients',
       where: 'recipe_id = ?',
       whereArgs: [id],
     );
-    
+
     List<Ingredient> ingredients = ingredientMaps.map((map) {
       return Ingredient(
         id: map['id'] as String,
@@ -223,7 +239,7 @@ class DatabaseHelper {
         image: '',
       );
     }).toList();
-    
+
     return Recipe.fromMap(recipeMap, ingredients);
   }
 

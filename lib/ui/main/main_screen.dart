@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
 import '../../models/recipe.dart';
+import '../../models/user.dart';
 import '../../data/dummy/dummy_recipe.dart';
+import '../../ui/recipe/recipe_detail_page.dart';
+import '../../services/auth_service.dart';
+import '../../data/database/database_helper.dart';
 
 class MainScreen extends StatefulWidget {
   const MainScreen({super.key});
@@ -33,6 +37,20 @@ class _MainScreenState extends State<MainScreen> {
     });
   }
 
+  Future<User?> _getCurrentUser() async {
+    try {
+      final authService = AuthService.instance;
+      final dbHelper = DatabaseHelper.instance;
+      final userId = await authService.getCurrentUserId();
+      if (userId != null) {
+        return await dbHelper.getUserById(userId);
+      }
+    } catch (e) {
+      print('Error getting current user: $e');
+    }
+    return null;
+  }
+
   @override
   void dispose() {
     _searchController.dispose();
@@ -40,51 +58,57 @@ class _MainScreenState extends State<MainScreen> {
   }
 
   Widget _popularRecipeCard(Recipe recipe) {
-    return Container(
-      decoration: BoxDecoration(
-        color: const Color(0xFFFDFDFD),
-        borderRadius: BorderRadius.circular(16),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.08),
-            blurRadius: 12,
-            offset: const Offset(0, 6),
+    return GestureDetector(
+      onTap: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => RecipeDetailPage(recipe: recipe),
           ),
-        ],
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          ClipRRect(
-            borderRadius: const BorderRadius.vertical(top: Radius.circular(16)),
-            child: Image.asset(
-              recipe.image,
-              height: 80,
-              width: double.maxFinite,
-              fit: BoxFit.cover,
-              errorBuilder: (_, __, ___) => Container(
+        );
+      },
+      child: Container(
+        decoration: BoxDecoration(
+          color: const Color(0xFFFDFDFD),
+          borderRadius: BorderRadius.circular(16),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.08),
+              blurRadius: 12,
+              offset: const Offset(0, 6),
+            ),
+          ],
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            ClipRRect(
+              borderRadius: const BorderRadius.vertical(
+                top: Radius.circular(16),
+              ),
+              child: Image.asset(
+                recipe.image,
                 height: 80,
-                color: const Color(0xFFEAEAEA),
-                // child: const Icon(
-                //   Icons.fastfood,
-                //   size: 30,
-                //   color: Color(0xFF7A7A7A),
+                width: double.maxFinite,
+                fit: BoxFit.cover,
+                errorBuilder: (_, __, ___) =>
+                    Container(height: 80, color: const Color(0xFFEAEAEA)),
               ),
             ),
-          ),
-          Padding(
-            padding: const EdgeInsets.all(4),
-            child: Text(
-              recipe.title,
-              maxLines: 2,
-              overflow: TextOverflow.ellipsis,
-              style: const TextStyle(
-                fontWeight: FontWeight.bold,
-                color: Color(0xFF2C2C2C),
+            Padding(
+              padding: const EdgeInsets.all(4),
+              child: Text(
+                recipe.title,
+                maxLines: 2,
+                overflow: TextOverflow.ellipsis,
+                style: const TextStyle(
+                  fontWeight: FontWeight.bold,
+                  color: Color(0xFF2C2C2C),
+                ),
               ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
@@ -112,13 +136,18 @@ class _MainScreenState extends State<MainScreen> {
             ),
           ],
         ),
-        actions: const [
-          Icon(
-            Icons.account_circle_outlined,
-            size: 36,
-            color: Color(0xFF2C2C2C),
+        actions: [
+          GestureDetector(
+            onTap: () {
+              Navigator.pushNamed(context, '/settings');
+            },
+            child: const Icon(
+              Icons.account_circle_outlined,
+              size: 36,
+              color: Color(0xFF2C2C2C),
+            ),
           ),
-          SizedBox(width: 8),
+          const SizedBox(width: 8),
         ],
       ),
       body: Container(
@@ -134,13 +163,22 @@ class _MainScreenState extends State<MainScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const Text(
-                'Good morning!',
-                style: TextStyle(
-                  fontSize: 24,
-                  fontWeight: FontWeight.bold,
-                  color: Color(0xFF2ECC71),
-                ),
+              FutureBuilder<User?>(
+                future: _getCurrentUser(),
+                builder: (context, snapshot) {
+                  String greeting = 'Good morning!';
+                  if (snapshot.hasData && snapshot.data != null) {
+                    greeting = 'Good morning, ${snapshot.data!.username}!';
+                  }
+                  return Text(
+                    greeting,
+                    style: const TextStyle(
+                      fontSize: 24,
+                      fontWeight: FontWeight.bold,
+                      color: Color(0xFF2ECC71),
+                    ),
+                  );
+                },
               ),
               const SizedBox(height: 6),
               const Text(
@@ -152,7 +190,6 @@ class _MainScreenState extends State<MainScreen> {
                 ),
               ),
               const SizedBox(height: 16),
-
               TextField(
                 controller: _searchController,
                 decoration: InputDecoration(
@@ -168,7 +205,6 @@ class _MainScreenState extends State<MainScreen> {
                 ),
               ),
               const SizedBox(height: 24),
-
               if (!_hasSearched) ...[
                 const Text(
                   'Popular Recipes',
@@ -192,8 +228,6 @@ class _MainScreenState extends State<MainScreen> {
                 ),
                 const SizedBox(height: 24),
               ],
-
-              // Search Results
               if (_hasSearched)
                 _filteredRecipes.isEmpty
                     ? const Center(
@@ -211,26 +245,42 @@ class _MainScreenState extends State<MainScreen> {
                         itemCount: _filteredRecipes.length,
                         itemBuilder: (context, index) {
                           final recipe = _filteredRecipes[index];
-                          return Card(
-                            color: const Color(0xFFFDFDFD),
-                            elevation: 3,
-                            margin: const EdgeInsets.only(bottom: 10),
-                            child: ListTile(
-                              title: Text(
-                                recipe.title,
-                                style: const TextStyle(
-                                  color: Color(0xFF2C2C2C),
-                                  fontWeight: FontWeight.w600,
+                          return GestureDetector(
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) =>
+                                      RecipeDetailPage(recipe: recipe),
                                 ),
-                              ),
-                              subtitle: Text(
-                                recipe.ingredients
-                                    .map(
-                                      (i) =>
-                                          '${i.name} (${i.quantity} ${i.unit})',
-                                    )
-                                    .join(', '),
-                                style: const TextStyle(
+                              );
+                            },
+                            child: Card(
+                              color: const Color(0xFFFDFDFD),
+                              elevation: 3,
+                              margin: const EdgeInsets.only(bottom: 10),
+                              child: ListTile(
+                                title: Text(
+                                  recipe.title,
+                                  style: const TextStyle(
+                                    color: Color(0xFF2C2C2C),
+                                    fontWeight: FontWeight.w600,
+                                  ),
+                                ),
+                                subtitle: Text(
+                                  recipe.ingredients
+                                      .map(
+                                        (i) =>
+                                            '${i.name} (${i.quantity} ${i.unit})',
+                                      )
+                                      .join(', '),
+                                  style: const TextStyle(
+                                    color: Color(0xFF6F6F6F),
+                                  ),
+                                ),
+                                trailing: const Icon(
+                                  Icons.arrow_forward_ios,
+                                  size: 16,
                                   color: Color(0xFF6F6F6F),
                                 ),
                               ),

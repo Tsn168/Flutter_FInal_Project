@@ -75,14 +75,8 @@
 //   }
 // }
 import 'package:flutter/material.dart';
-import 'ui/main/main_screen.dart';
-import 'tab/tab_page.dart';
 import 'ui/Welcome_Page/welcome_Page.dart';
-import 'services/auth_service.dart';
-import 'ui/IngredientMatch/IngredientMatch.dart';
-import 'ui/pantry/pantry_page.dart';
 import 'ui/settings/settings_page.dart';
-import 'ui/Welcome_Page/welcome_Page.dart';
 
 void main() {
   runApp(const MyApp());
@@ -97,6 +91,10 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'MahopFlex',
       home: const WelcomePage(),
+      routes: {
+        '/welcome': (context) => const WelcomePage(),
+        '/settings': (context) => const UserSetting(),
+      },
     );
   }
 }
