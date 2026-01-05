@@ -47,7 +47,7 @@ class _RegisterPageState extends State<RegisterPage> {
   Future<void> _handleRegister() async {
     if (_formKey.currentState?.validate() ?? false) {
       _formKey.currentState?.save();
-      
+
       // Additional validation
       if (_password != _confirmPassword) {
         ScaffoldMessenger.of(context).showSnackBar(
@@ -58,24 +58,24 @@ class _RegisterPageState extends State<RegisterPage> {
         );
         return;
       }
-      
+
       setState(() {
         _isLoading = true;
       });
-      
+
       // Call AuthService to register
       final result = await AuthService.instance.register(
         _email!,
         _username!,
         _password!,
       );
-      
+
       setState(() {
         _isLoading = false;
       });
-      
+
       if (!mounted) return;
-      
+
       if (result['success']) {
         // Navigate to BottomNavTab on success
         Navigator.pushAndRemoveUntil(
@@ -405,7 +405,8 @@ class RegisterForm extends StatelessWidget {
                                         107,
                                       ),
                                     ),
-                                    onPressed: onToggleConfirmPasswordVisibility,
+                                    onPressed:
+                                        onToggleConfirmPasswordVisibility,
                                   ),
                                 ),
                                 validator: (value) {
