@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import '../../data/dummy/dummy_ingredient.dart';
-import '../../models/ingredient.dart';
 import '../../models/user_pantry_item.dart';
 import '../../services/auth_service.dart';
 import '../../data/database/database_helper.dart';
